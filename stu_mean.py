@@ -32,7 +32,7 @@ def populate(dictionary, tbln, col1,col2,col3):
     for each in dictionary:
         print each
         add= "INSERT INTO "+ tbln + " VALUES ('" + each[col1] + "'," + each[col2] + "," + each[col3] + ")"
-        c.execute(add)
+      c.execute(add)
        
 
 
@@ -50,7 +50,6 @@ for items in foo:
     print items
     
 
-
 def avg(stdid, g):
     ctr=0
     tot=0
@@ -59,7 +58,6 @@ def avg(stdid, g):
             tot+=items[2]
             ctr+=1
     return tot/ctr
-
 
 
 db.commit() #save changes
