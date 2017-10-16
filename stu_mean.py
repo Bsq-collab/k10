@@ -32,8 +32,8 @@ def populate(dictionary, tbln, col1,col2,col3):
     for each in dictionary:
         print each
         add= "INSERT INTO "+ tbln + " VALUES ('" + each[col1] + "'," + each[col2] + "," + each[col3] + ")"
-      c.execute(add)
-       
+        c.execute(add)
+        
 
 
 populate(peeps,'peeps', 'name','age','id')
@@ -50,14 +50,24 @@ for items in foo:
     print items
     
 
-def avg(stdid, g):
+def avg(stdid):
     ctr=0
     tot=0
+    q= "SELECT mark FROM courses WHERE courses.id =" + str(stdid) +";"
+    g= c.execute(q)
+    
     for items in g:
-        while items[1]==stdid:
-            tot+=items[2]
-            ctr+=1
+        tot+=items[0]
+        ctr+=1
     return tot/ctr
+
+def display():
+    q= "SELECT name, id FROM peeps"
+    data= c.execute(q)
+    for each in data:
+        print "Name: "+ each[0] + "\n ID: "+ str(each[1])+ "\nAverage: " + str(avg(each[1]))
+
+display();
 
 
 db.commit() #save changes
