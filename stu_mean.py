@@ -30,11 +30,8 @@ c.execute(command)
 #~~~~~~~~~~~~~~~~~~populating tables~~~~~~~~~~~~~~~~~~~
 def populate(dictionary, tbln, col1,col2,col3):
     for each in dictionary:
-        print each
         add= "INSERT INTO "+ tbln + " VALUES ('" + each[col1] + "'," + each[col2] + "," + each[col3] + ")"
         c.execute(add)
-        
-
 
 populate(peeps,'peeps', 'name','age','id')
 populate(courses,'courses', 'code','mark','id')
@@ -44,35 +41,33 @@ populate(courses,'courses', 'code','mark','id')
 q= "SELECT name, peeps.id, mark FROM peeps, courses WHERE peeps.id=courses.id"
 
 foo= c.execute(q)
-print foo #>sqlite3.cursor object at 0xfioadjkngreds>
+# print foo #>sqlite3.cursor object at 0xfioadjkngreds>
 #print foo.fetchall()#prints list of all values
-for items in foo:
-    print items
-    
 
-def avg(stdid):
-    ctr=0
-    tot=0
-    q= "SELECT mark FROM courses WHERE courses.id =" + str(stdid) +";"
-    g= c.execute(q)
-    
-    for items in g:
-        tot+=items[0]
-        ctr+=1
-    return tot/ctr
+# Fxn will take the cursor returned from the query in the database
+def averages(cursor):
+    # Start from the first student
+    student = 1
+    # Initialize
+    total = 0
+    ctr = 0
+    for each in cursor:
+        # If the student remains the same, just add to their mark total
+        # and increment the counter
+        if each[1] == student:
+            total += each[2]
+            ctr+=1
 
-def display():
-    q= "SELECT name, id FROM peeps"
-    data= c.execute(q)
-    for each in data:
-        print "Name: "+ each[0] + "\n ID: "+ str(each[1])+ "\nAverage: " + str(avg(each[1]))
+        # Otherwise, when the student changes, print the old student's info
+        # and start calculating the next student's info
+        else:
+            print "Name: " + str(each[0]) + ", ID: " + str(each[1]) + ", avg: " + \
+                  str(int(100.0 * total/ctr)/100.0)
+            total = each[2]
+            ctr = 1
+            student = each[1]
 
-display();
-
+averages(foo)
 
 db.commit() #save changes
 db.close()  #close database
-
-
-
-
