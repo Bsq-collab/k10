@@ -45,6 +45,43 @@ foo= c.execute(q)
 #print foo.fetchall()#prints list of all values
 
 # Fxn will take the cursor returned from the query in the database
+
+def lookup(student):
+    q= "SELECT name, peeps.id,mark FROM peeps, courses WHERE peeps.id = "+studentID
+    return c.execute(q)
+    
+
+def avg(studentID):
+    ctr=0
+    total=0
+    for each in lookup(studentID):
+        total+= each[2]
+        ctr+=1
+    return float(total)/ctr
+
+def display(studentID):
+    for each in lookup(studentID):
+        print "Name: " + str(each[0]) + "\nID: " + str(each[1]) + "\nAverage: " + \
+            str(int(100.0 * total/ctr)/100.0)
+
+command = "CREATE TABLE peeps_avg(Peeps INTEGER, Average INTEGER)"
+c.execute(command)
+
+def populate2():
+    cursor= "SELECT id FROM peeps"
+    for each in cursor:
+        add= "INSERT INTO peeps_avg VALUES ('" + each[0] + "'," + avg(each[0]) ")"
+        c.execute(add)
+populate2()
+
+def update_average(studentID,newVal):
+    q= "UPDATE peeps_csv SET Average="+newVal+"WHERE id= "+studentID
+    c.execute(q)
+
+def add_row(course, mark, studentID):
+    q = "INSERT INTO courses VALUES (" + course + "," + mark + "," + studentID
+    c.execute(q)
+
 def averages(cursor):
     # Start from the first student
     student = 1
@@ -52,6 +89,12 @@ def averages(cursor):
     total = 0
     ctr = 0
     for each in cursor:
+
+        while each[1]== student:
+            total+=each[2]
+            ctr+=1
+        float(total)/ctr
+        student+=1
         # If the student remains the same, just add to their mark total
         # and increment the counter
         if each[1] == student:
